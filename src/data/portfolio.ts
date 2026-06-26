@@ -15,12 +15,12 @@ export const navLinks = [
 export const socialLinks = [
   {
     label: 'GitHub',
-    href: 'https://github.com/seu-usuario',
+    href: 'https://github.com/Dev-JoaoNeto',
     className: 'text-zinc-300!',
   },
   {
     label: 'LinkedIn',
-    href: 'https://www.linkedin.com/in/seu-usuario',
+    href: 'https://www.linkedin.com/in/joao-neto-dev/',
     className: 'text-blue-400!',
   },
   {

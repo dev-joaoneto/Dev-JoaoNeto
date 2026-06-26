@@ -24,13 +24,6 @@ export function Projects() {
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(52,211,153,0.09),transparent_30%)]" />
 
             <div className="relative mx-auto flex w-full max-w-6xl items-center justify-center">
-              <div className="absolute left-0 hidden w-24 text-right lg:block">
-                <span className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-300">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-                <span className="ml-auto mt-4 block h-28 w-px bg-gradient-to-b from-emerald-400/70 to-white/10" />
-              </div>
-
               <div className="w-[76%] transition duration-700 ease-out">
                 <ProjectCard {...project} index={index} />
               </div>
