@@ -1,0 +1,32 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">JN monogram logo</title>
+  <desc id="desc">A sophisticated green JN monogram logo for a developer portfolio.</desc>
+
+  <defs>
+    <linearGradient id="greenGradient" x1="24" y1="18" x2="96" y2="102" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#34D399"/>
+      <stop offset="1" stop-color="#059669"/>
+    </linearGradient>
+
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#10B981" flood-opacity="0.28"/>
+    </filter>
+  </defs>
+
+  <rect x="8" y="8" width="104" height="104" rx="28" fill="#020617"/>
+  <rect x="8.75" y="8.75" width="102.5" height="102.5" rx="27.25" stroke="#10B981" stroke-opacity="0.35" stroke-width="1.5"/>
+
+  <g filter="url(#softGlow)">
+    <path
+      d="M31 37H47V72.5C47 82.2 40.9 88.5 31.5 88.5C26.5 88.5 22.2 86.8 19 83.9L25.2 72.3C26.8 74 28.6 75 30.6 75C33.1 75 34.5 73.3 34.5 70.4V49.8H31V37Z"
+      fill="url(#greenGradient)"
+    />
+
+    <path
+      d="M55 37H69.2L88.4 64.7V37H102V88H88.1L68.7 60.1V88H55V37Z"
+      fill="url(#greenGradient)"
+    />
+  </g>
+
+  <path d="M24 101H96" stroke="#34D399" stroke-opacity="0.35" stroke-width="1.5" stroke-linecap="round"/>
+</svg>
