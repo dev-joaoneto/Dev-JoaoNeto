@@ -23,11 +23,33 @@ export function ProjectCard({
   return (
     <article className="group relative h-[500px] overflow-hidden rounded-lg border border-white/10 bg-zinc-950 shadow-[0_26px_100px_rgba(0,0,0,0.45)] transition duration-700 ease-out hover:-translate-y-1 hover:border-emerald-400/50 hover:shadow-[0_34px_110px_rgba(0,0,0,0.52)] md:h-[560px]">
       {imageUrl ? (
-        <img
-          src={imageUrl}
-          alt={`Imagem do projeto ${title}`}
-          className="h-full w-full object-cover transition duration-1000 ease-out group-hover:scale-[1.03]"
-        />
+        <>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(52,211,153,0.16),transparent_34%),linear-gradient(180deg,rgba(9,9,11,0.92),rgba(0,0,0,0.98))] md:hidden" />
+
+          <div className="absolute inset-x-4 top-6 z-0 overflow-hidden rounded-lg border border-white/10 bg-zinc-950 shadow-[0_24px_80px_rgba(0,0,0,0.5)] md:hidden">
+            <div className="flex items-center justify-between border-b border-white/10 bg-zinc-900/90 px-3 py-2">
+              <div className="flex gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-red-400" />
+                <span className="h-2 w-2 rounded-full bg-yellow-300" />
+                <span className="h-2 w-2 rounded-full bg-emerald-400" />
+              </div>
+              <span className="h-1.5 w-20 rounded-full bg-white/10" />
+            </div>
+            <div className="bg-black p-2">
+              <img
+                src={imageUrl}
+                alt={`Imagem do projeto ${title}`}
+                className="aspect-[4/3] w-full rounded object-cover object-top"
+              />
+            </div>
+          </div>
+
+          <img
+            src={imageUrl}
+            alt={`Imagem do projeto ${title}`}
+            className="hidden h-full w-full object-cover transition duration-1000 ease-out group-hover:scale-[1.03] md:block"
+          />
+        </>
       ) : (
         <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(135deg,rgba(39,39,42,0.96),rgba(0,0,0,0.96)),radial-gradient(circle_at_70%_25%,rgba(52,211,153,0.25),transparent_30%)] p-6 transition duration-1000 ease-out group-hover:scale-[1.03]">
           <div className="h-[72%] w-[84%] rounded-lg border border-white/10 bg-black/45 p-5 shadow-2xl">
@@ -65,7 +87,7 @@ export function ProjectCard({
           <h3 className="max-w-3xl text-2xl font-semibold text-white md:text-4xl">
             {title}
           </h3>
-          <p className="mt-4 max-w-2xl text-sm leading-6 text-zinc-200 md:text-base md:leading-7">
+          <p className="mt-4 max-w-2xl leading-6 text-zinc-200 text-base leading-7 hidden md:block">
             {description}
           </p>
 
