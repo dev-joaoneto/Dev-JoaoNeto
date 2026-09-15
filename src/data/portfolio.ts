@@ -117,7 +117,7 @@ export const projects = [
       'SpendNote é uma aplicação full stack desenvolvida para gerenciamento de finanças pessoais, permitindo o controle completo de receitas, despesas e análise financeira em tempo real.',
     stack: ['React', 'TypeScript', 'Tailwind', 'Node.js', 'Firebase'],
     repoUrl: 'https://github.com/dev-joaoneto/spendnote-api.git',
-    liveUrl: 'https://spendnote-frontend.xgg4n8.easypanel.host/',
+    liveUrl: 'https://spendnote.digytron.com/',
     imageUrl: spendnote,
   },
   {
@@ -126,7 +126,7 @@ export const projects = [
       'Dev Burguer é uma aplicação full stack desenvolvida para simular um sistema completo de pedidos online para uma hamburgueria, contemplando desde a experiência do usuário final até o gerenciamento administrativo dos pedidos.',
     stack: ['React', 'Axios', 'styled-components', 'Node.js', 'Stripe'],
     repoUrl: '#',
-    liveUrl: 'https://dev-burguer-frontend.xgg4n8.easypanel.host/',
+    liveUrl: 'https://devburguer.digytron.com/login',
     imageUrl: devburguer,
   },
   {
