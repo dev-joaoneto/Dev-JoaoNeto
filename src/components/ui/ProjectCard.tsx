@@ -7,6 +7,7 @@ type ProjectCardProps = {
   repoUrl: string
   liveUrl: string
   imageUrl?: string
+  imageFit?: 'cover' | 'contain'
   index?: number
 }
 
@@ -16,6 +17,7 @@ export function ProjectCard({
   stack,
   liveUrl,
   imageUrl,
+  imageFit = 'cover',
   index = 0,
 }: ProjectCardProps) {
   const projectNumber = String(index + 1).padStart(2, '0')
@@ -39,7 +41,7 @@ export function ProjectCard({
               <img
                 src={imageUrl}
                 alt={`Imagem do projeto ${title}`}
-                className="aspect-[4/3] w-full rounded object-cover object-top"
+                className={`aspect-[4/3] w-full rounded bg-black object-top ${imageFit === 'contain' ? 'object-contain p-3' : 'object-cover'}`}
               />
             </div>
           </div>
@@ -47,7 +49,7 @@ export function ProjectCard({
           <img
             src={imageUrl}
             alt={`Imagem do projeto ${title}`}
-            className="hidden h-full w-full object-cover transition duration-1000 ease-out group-hover:scale-[1.03] md:block"
+            className={`hidden h-full w-full bg-black transition duration-1000 ease-out group-hover:scale-[1.03] md:block ${imageFit === 'contain' ? 'object-contain p-12' : 'object-cover'}`}
           />
         </>
       ) : (

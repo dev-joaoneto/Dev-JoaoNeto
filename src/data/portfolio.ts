@@ -3,6 +3,7 @@ import devburguer from '/assets/Dev-grill.png'
 import iphone from '/assets/Dev-iphone.png'
 import wagner from '/assets/wagneradv.png'
 import digytron from '/assets/digytron.png'
+import digytronHero from '/assets/digytron-hero.webp'
 
 export const navLinks = [
   { label: 'Inicio', href: '#home' },
@@ -146,6 +147,16 @@ export const projects = [
     repoUrl: '#',
     liveUrl: 'https://wagnersimoesadv.com.br/',
     imageUrl: wagner,
+  },
+  {
+    title: 'Digytron',
+    description:
+      'Site institucional da Digytron para apresentar soluções de presença digital, aquisição, automação e evolução contínua. Une posicionamento, ecossistemas, planos e cases em uma jornada pensada para transformar visitas em conversas comerciais.',
+    stack: ['React', 'TypeScript', 'Tailwind', 'Framer Motion', 'D3.js'],
+    repoUrl: '#',
+    liveUrl: 'https://digytron.com.br/',
+    imageUrl: digytronHero,
+    imageFit: 'contain' as const,
   },
   {
     title: 'Digytron Lecion',
