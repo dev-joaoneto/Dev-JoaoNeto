@@ -6,6 +6,7 @@ import { Projects } from './components/sections/Projects'
 import { Skills } from './components/sections/Skills'
 import { Footer } from './components/layout/Footer'
 import { Header } from './components/layout/Header'
+import ClickSpark from './components/reactbits/ClickSpark'
 
 function App() {
   useEffect(() => {
@@ -31,9 +32,16 @@ function App() {
   }, [])
 
   return (
+    <ClickSpark sparkColor={['#34d399', '#a7f3d0']} sparkCount={9} sparkRadius={22} duration={450}>
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
+      <a
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:border focus:border-emerald-400 focus:bg-black focus:px-4 focus:py-2 focus:text-sm focus:text-emerald-300"
+        href="#main"
+      >
+        Pular para o conteúdo
+      </a>
       <Header />
-      <main>
+      <main id="main">
         <Hero />
         <About />
         <Skills />
@@ -42,6 +50,7 @@ function App() {
       </main>
       <Footer />
     </div>
+    </ClickSpark>
   )
 }
 

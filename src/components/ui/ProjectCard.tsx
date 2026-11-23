@@ -1,20 +1,16 @@
+import type { Project } from '../../data/portfolio'
 import { Button } from './Button'
 
-type ProjectCardProps = {
-  title: string
-  description: string
-  stack: string[]
-  repoUrl: string
-  liveUrl: string
-  imageUrl?: string
-  imageFit?: 'cover' | 'contain'
+type ProjectCardProps = Project & {
   index?: number
 }
 
 export function ProjectCard({
   title,
+  tagline,
   description,
   stack,
+  repoUrl,
   liveUrl,
   imageUrl,
   imageFit = 'cover',
@@ -40,7 +36,9 @@ export function ProjectCard({
             <div className="bg-black p-2">
               <img
                 src={imageUrl}
-                alt={`Imagem do projeto ${title}`}
+                alt={`Captura de tela do projeto ${title}`}
+                loading="lazy"
+                decoding="async"
                 className={`aspect-[4/3] w-full rounded bg-black object-top ${imageFit === 'contain' ? 'object-contain p-3' : 'object-cover'}`}
               />
             </div>
@@ -48,7 +46,9 @@ export function ProjectCard({
 
           <img
             src={imageUrl}
-            alt={`Imagem do projeto ${title}`}
+            alt={`Captura de tela do projeto ${title}`}
+            loading="lazy"
+            decoding="async"
             className={`hidden h-full w-full bg-black transition duration-1000 ease-out group-hover:scale-[1.03] md:block ${imageFit === 'contain' ? 'object-contain p-12' : 'object-cover'}`}
           />
         </>
@@ -86,13 +86,17 @@ export function ProjectCard({
 
         <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.008] px-6 py-6 shadow-[0_18px_80px_rgba(0,0,0,0.22)] md:backdrop-blur-xs md:px-8 md:py-7">
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/[0.08] via-white/[0.025] to-transparent" />
+
           <h3 className="max-w-3xl text-2xl font-semibold text-white md:text-4xl">
             {title}
           </h3>
-          <p className="mt-4 max-w-2xl leading-6 text-zinc-200 text-base leading-7 hidden md:block">
-            {description}
+          <p className="mt-1 text-sm font-medium text-emerald-300/90 md:text-base">
+            {tagline}
           </p>
 
+          <p className="mt-4 hidden max-w-2xl text-base leading-7 text-zinc-200 md:block">
+            {description}
+          </p>
 
           <div className="mt-5 flex flex-wrap gap-2">
             {stack.map((tech) => (
@@ -105,9 +109,27 @@ export function ProjectCard({
             ))}
           </div>
 
-          <Button className="mt-6" href={liveUrl} target="_blank" rel="noreferrer">
-            Ver projeto
-          </Button>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Button
+              href={liveUrl}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`Abrir o projeto ${title} em uma nova aba`}
+            >
+              Ver projeto
+            </Button>
+            {repoUrl ? (
+              <Button
+                href={repoUrl}
+                variant="secondary"
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`Ver o código do projeto ${title} no GitHub`}
+              >
+                Código
+              </Button>
+            ) : null}
+          </div>
         </div>
       </div>
     </article>

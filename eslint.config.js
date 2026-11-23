@@ -19,4 +19,12 @@ export default defineConfig([
       globals: globals.browser,
     },
   },
+  {
+    // código de terceiros (React Bits) mantido como veio da fonte
+    files: ['src/components/reactbits/**/*.tsx'],
+    rules: {
+      'react-hooks/refs': 'off',
+      'no-empty': 'off',
+    },
+  },
 ])

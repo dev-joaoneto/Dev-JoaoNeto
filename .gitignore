@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# imagens originais (fonte dos .webp em public/assets)
+assets-source

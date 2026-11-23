@@ -1,24 +1,43 @@
-import profileImage from '/assets/foto-perfil.png'
+import { profile } from '../../data/portfolio'
+import { useMotionOk } from '../../hooks/useMotionOk'
+import { DotPortrait } from '../effects/DotPortrait'
+import profileImage from '/assets/foto-perfil.webp'
 
 export function About() {
+  const showDots = useMotionOk(768)
+
   return (
     <section
       id="about"
-      className="scroll-reveal flex min-h-screen items-center border-t border-white/10 bg-black px-5 py-16 lg:py-20"
+      className="scroll-reveal relative flex min-h-screen items-center border-t border-white/10 bg-black px-5 py-16 lg:py-20"
     >
       <div className="absolute inset-x-0 bottom-0 -z-10 h-px bg-gradient-to-r from-transparent via-emerald-400/40 to-transparent" />
       <div className="mx-auto flex min-h-[min(780px,calc(100vh-8rem))] w-full max-w-5xl items-center">
         <div className="grid h-full w-full gap-5 lg:grid-cols-[0.82fr_1.18fr]">
-          <div className="relative min-h-[360px] overflow-hidden rounded-lg border border-emerald-400/20 bg-zinc-950 lg:min-h-full">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_35%_20%,rgba(52,211,153,0.22),transparent_34%),linear-gradient(180deg,rgba(24,24,27,0),rgba(0,0,0,0.72))]" />
+          <div className="group relative min-h-[360px] overflow-hidden rounded-lg border border-emerald-400/20 bg-zinc-950 lg:min-h-full">
             <img
               src={profileImage}
-              alt="Foto de perfil do desenvolvedor"
-              className="h-full w-full object-cover opacity-95"
+              alt={`Foto de ${profile.name}, ${profile.role.toLowerCase()}`}
+              loading="lazy"
+              decoding="async"
+              className={`absolute inset-0 h-full w-full object-cover object-top transition-opacity duration-700 ${
+                showDots ? 'opacity-0 group-hover:opacity-95' : 'opacity-95'
+              }`}
             />
-            <div className="absolute bottom-0 left-0 right-0 border-t border-emerald-400/20 bg-black/70 p-5 backdrop-blur-md">
-              <p className="text-md text-center font-bold uppercase tracking-[0.24em] text-emerald-600">
-                João Neto
+            {showDots ? (
+              <div className="absolute inset-0 transition-opacity duration-700 group-hover:opacity-0">
+                <DotPortrait src={profileImage} alt="" gap={6} />
+              </div>
+            ) : null}
+            <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_35%_20%,rgba(52,211,153,0.18),transparent_34%),linear-gradient(180deg,rgba(24,24,27,0),rgba(0,0,0,0.72))]" />
+            {showDots ? (
+              <span className="pointer-events-none absolute left-4 top-4 z-20 font-mono text-[10px] uppercase tracking-[0.3em] text-emerald-300/70 transition-opacity duration-500 group-hover:opacity-0">
+                passe o mouse para ver a foto
+              </span>
+            ) : null}
+            <div className="absolute bottom-0 left-0 right-0 z-20 border-t border-emerald-400/20 bg-black/70 p-5 backdrop-blur-md">
+              <p className="text-center text-sm font-bold uppercase tracking-[0.24em] text-emerald-300">
+                {profile.name}
               </p>
             </div>
           </div>
@@ -28,15 +47,35 @@ export function About() {
               Sobre mim
             </span>
             <h2 className="mt-4 text-2xl font-semibold leading-tight text-white sm:text-3xl lg:text-4xl">
-              Desenvolvedor Full Stack
+              {profile.role}
             </h2>
 
             <div className="mt-6 space-y-4 text-sm leading-7 text-zinc-400 sm:text-base">
               <p>
-                Olá! Meu nome é João Neto, tenho 27 anos. Desenvolvedor Full Stack, apaixonado por tecnologia e pelo poder que o desenvolvimento tem de transformar ideias em soluções reais. Meu objetivo é evoluir constantemente como profissional, aprimorando tanto a parte técnica quanto a capacidade de entender as necessidades dos usuários e das empresas. Busco sempre escrever códigos limpos, organizados e eficientes, além de valorizar o trabalho em equipe e a troca de conhecimento.
+                Sou o {profile.name}, tenho 27 anos e trabalho com desenvolvimento
+                porque gosto do momento em que uma ideia vira algo que as pessoas
+                realmente usam. Atuo nas duas pontas: construo a interface que o
+                usuário vê e a API que sustenta ela, sempre buscando código limpo,
+                organizado e fácil de evoluir.
               </p>
               <p>
-                Sou uma pessoa comprometida, curiosa e motivada por desafios. Gosto de aprender novas ferramentas, participar de projetos práticos e ver o resultado do meu trabalho ganhando vida na tela. Atualmente, foco em desenvolver projetos próprios e contribuir com soluções que unam tecnologia, design e funcionalidade, construindo uma base sólida para crescer na área e gerar impacto positivo no mercado.
+                Como Engenheiro de IA, levo modelos de linguagem para dentro do
+                produto: integro APIs de LLMs, desenho agentes e automações, escrevo
+                prompts que funcionam em produção e conecto ferramentas via MCP. A
+                ideia é sempre a mesma — IA resolvendo um problema real do usuário,
+                não enfeite.
+              </p>
+              <p>
+                Já entreguei do site institucional ao sistema com pagamento,
+                autenticação e painel administrativo — passando por e-commerce,
+                plataforma educacional com IA e aplicação de finanças pessoais. Em
+                todos eles, o mesmo cuidado: responsividade de verdade, performance
+                e uma experiência que não deixa o usuário na dúvida.
+              </p>
+              <p>
+                Sou curioso, movido por desafio e valorizo trabalho em equipe e troca
+                de conhecimento. Estou sempre aprendendo ferramenta nova e procurando
+                time onde eu possa contribuir e crescer junto.
               </p>
             </div>
           </article>

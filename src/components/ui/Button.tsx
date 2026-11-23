@@ -13,7 +13,7 @@ type ButtonProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
 
 const variants: Record<ButtonVariant, string> = {
   primary:
-    'border-emerald-400/90 bg-emerald-400/20 text-black shadow-[0_0_12px_rgba(52,211,153,0.18)] hover:-translate-y-0.5 hover:bg-emerald-300/10',
+    'border-emerald-400 bg-emerald-400 text-black shadow-[0_0_18px_rgba(52,211,153,0.28)] hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-emerald-300',
   secondary:
     'border-white/10 bg-white/[0.03] text-white hover:-translate-y-0.5 hover:border-emerald-400/60 hover:text-emerald-200',
 }

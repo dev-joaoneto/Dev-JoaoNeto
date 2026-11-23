@@ -48,11 +48,13 @@ export function Header() {
           href="#home"
         >
           Dev<span className="text-emerald-300">.Fullstack</span>
+          <span className="text-zinc-500">+</span>
+          <span className="text-emerald-300">IA</span>
         </a>
 
         <nav
           className="hidden items-center gap-7 md:flex"
-          aria-label="Navegacao principal"
+          aria-label="Navegação principal"
         >
           {navLinks.map((link) => (
             <a
@@ -63,6 +65,7 @@ export function Header() {
               }`}
               href={link.href}
               key={link.href}
+              aria-current={activeLink === link.href ? 'true' : undefined}
               onClick={() => setActiveLink(link.href)}
             >
               {link.label}
@@ -78,19 +81,43 @@ export function Header() {
         </nav>
 
         <button
-          className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-white/10 bg-white/[0.03] text-white transition hover:border-emerald-400/60 md:hidden"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-white/10 bg-white/[0.03] text-white transition hover:border-emerald-400/60 hover:text-emerald-300 md:hidden"
           onClick={() => setIsOpen((current) => !current)}
           type="button"
-          aria-label="Abrir menu"
+          aria-label={isOpen ? 'Fechar menu' : 'Abrir menu'}
           aria-expanded={isOpen}
+          aria-controls="mobile-nav"
         >
-          <span className="text-xl">{isOpen ? 'x' : '='}</span>
+          <svg
+            className="h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            {isOpen ? (
+              <>
+                <path d="M6 6l12 12" />
+                <path d="M18 6L6 18" />
+              </>
+            ) : (
+              <>
+                <path d="M4 7h16" />
+                <path d="M4 12h16" />
+                <path d="M4 17h16" />
+              </>
+            )}
+          </svg>
         </button>
       </div>
 
       {isOpen && (
         <nav
           className="border-t border-white/10 px-5 py-4 md:hidden"
+          id="mobile-nav"
           aria-label="Menu mobile"
         >
           <div className="mx-auto flex max-w-6xl flex-col gap-3">

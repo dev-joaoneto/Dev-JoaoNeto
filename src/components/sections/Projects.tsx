@@ -1,4 +1,5 @@
 import { projects } from '../../data/portfolio'
+import SpotlightCard from '../reactbits/SpotlightCard'
 import { ProjectCard } from '../ui/ProjectCard'
 import { SectionHeading } from '../ui/SectionHeading'
 
@@ -8,8 +9,9 @@ export function Projects() {
       <div className="scroll-reveal mx-auto max-w-6xl">
         <SectionHeading
           eyebrow="Projetos"
-          title="Projetos desenvolvidos com foco em experiencia, performance e codigo bem estruturado."
-          description="Uma selecao de aplicacoes que mostram minha evolucao tecnica, atencao aos detalhes e capacidade de transformar ideias em solucoes funcionais."
+          title="Produtos no ar, do primeiro componente ao deploy."
+          description="Uma seleção de aplicações que mostram minha evolução técnica, atenção aos detalhes e capacidade de transformar ideias em soluções funcionais."
+          className="mb-10 md:mb-2"
         />
       </div>
 
@@ -23,9 +25,13 @@ export function Projects() {
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(52,211,153,0.09),transparent_30%)]" />
 
             <div className="relative mx-auto flex w-full max-w-6xl items-center justify-center">
-              <div className="w-[76%] transition duration-700 ease-out">
+              <SpotlightCard
+                className="w-[76%] rounded-lg! bg-transparent! p-0! shadow-none!"
+                spotlightColor="rgba(52, 211, 153, 0.35)"
+                theme="dark"
+              >
                 <ProjectCard {...project} index={index} />
-              </div>
+              </SpotlightCard>
             </div>
           </div>
         ))}

@@ -20,6 +20,20 @@
 
 html {
   scroll-behavior: smooth;
+  /* altura do header sticky: impede que a seção pare escondida atrás dele */
+  scroll-padding-top: 5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid #34d399;
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
 body {
