@@ -20,18 +20,21 @@ export function About() {
               alt={`Foto de ${profile.name}, ${profile.role.toLowerCase()}`}
               loading="lazy"
               decoding="async"
-              className={`absolute inset-0 h-full w-full object-cover object-top transition-opacity duration-700 ${
-                showDots ? 'opacity-0 group-hover:opacity-95' : 'opacity-95'
+              className={`absolute inset-0 h-full w-full object-cover object-top ${
+                showDots
+                  ? // entrada: aparece rápido; saída: segura a foto enquanto os pontos voltam por cima
+                    'opacity-0 transition-opacity delay-[450ms] duration-[700ms] ease-in-out group-hover:opacity-95 group-hover:delay-0 group-hover:duration-[450ms] group-hover:ease-out'
+                  : 'opacity-95'
               }`}
             />
             {showDots ? (
-              <div className="absolute inset-0 transition-opacity duration-700 group-hover:opacity-0">
+              <div className="absolute inset-0 transition-opacity duration-[900ms] ease-out group-hover:opacity-0 group-hover:duration-[350ms] group-hover:ease-in">
                 <DotPortrait src={profileImage} alt="" gap={6} />
               </div>
             ) : null}
             <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_35%_20%,rgba(52,211,153,0.18),transparent_34%),linear-gradient(180deg,rgba(24,24,27,0),rgba(0,0,0,0.72))]" />
             {showDots ? (
-              <span className="pointer-events-none absolute left-4 top-4 z-20 font-mono text-[10px] uppercase tracking-[0.3em] text-emerald-300/70 transition-opacity duration-500 group-hover:opacity-0">
+              <span className="pointer-events-none absolute left-4 top-4 z-20 font-mono text-[10px] uppercase tracking-[0.3em] text-emerald-300/70 transition-opacity delay-500 duration-500 group-hover:opacity-0 group-hover:delay-0 group-hover:duration-200">
                 passe o mouse para ver a foto
               </span>
             ) : null}
