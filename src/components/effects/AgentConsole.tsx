@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import { profile, projects } from '../../data/portfolio'
 
-type Intent = 'about' | 'projects' | 'stack' | 'why' | 'contact' | 'fallback'
+type Intent = 'about' | 'ai' | 'projects' | 'stack' | 'why' | 'contact' | 'fallback'
 
 type Message = {
   id: number
@@ -12,28 +12,33 @@ type Message = {
 }
 
 const answers: Record<Intent, string> = {
-  about: `Sou o agente do João. Ele é Desenvolvedor Full Stack e Engenheiro de IA: constrói produtos web de ponta a ponta, da interface em React à API em Node.js, e integra LLMs e agentes que resolvem tarefas reais. Hoje são ${projects.length} projetos publicados.`,
+  about: `Sou o agente do João. Ele é Desenvolvedor Full Stack e Engenheiro de IA: constrói produtos web de ponta a ponta, da interface em React à API em Node.js, e coloca IA dentro do produto: RAG, fine-tuning, agentes com MCP e skills, tudo medido com evals. Hoje são ${projects.length} projetos publicados.`,
+  ai: 'Ele trabalha o ciclo inteiro. Começa pelo dado: limpeza, chunking, embeddings e banco vetorial para um RAG que cita a fonte. Escolhe o modelo e decide entre prompt, RAG ou fine-tuning (LoRA, dataset curado) pelo custo e pela precisão. Dá ação ao agente com tool calling, servidores MCP e skills reutilizáveis. E fecha com evals, guardrails e observabilidade de custo, latência e alucinação, para o agente ser confiável em produção.',
   projects: 'Estes são alguns produtos que ele colocou no ar. Todos estão online para você abrir agora:',
   stack:
-    'No front: React, TypeScript e Next.js. No back: Node.js, SQL, Supabase e Stripe. Na camada de IA: LLMs como Claude e Gemini, agentes, MCP e automações com n8n.',
-  why: 'Três motivos: ele entrega do primeiro componente ao deploy; usa IA como parte do produto, não como enfeite; e tem produtos reais no ar para você conferir.',
+    'No front: React, TypeScript e Next.js. No back: Node.js, SQL, Supabase e Stripe. Na camada de IA: Claude e Gemini, RAG com embeddings e banco vetorial, fine-tuning, agentes com MCP e skills, evals e automações com n8n.',
+  why: 'Três motivos: ele entrega do primeiro componente ao deploy; domina a engenharia de IA de ponta a ponta, do RAG e do fine-tuning ao agente com MCP medido por evals; e tem produtos reais no ar para você conferir.',
   contact: 'O caminho mais rápido é o WhatsApp. Também dá para baixar o currículo ou mandar um e-mail:',
   fallback:
     'Ainda sou um agente roteirizado, então por enquanto respondo às perguntas abaixo. Para qualquer outra coisa, fale direto com o João:',
 }
 
-const chips: { intent: Exclude<Intent, 'fallback'>; label: string }[] = [
-  { intent: 'about', label: 'Quem é o João?' },
-  { intent: 'projects', label: 'Mostre projetos' },
-  { intent: 'stack', label: 'Qual a stack?' },
-  { intent: 'why', label: 'Por que contratar?' },
-  { intent: 'contact', label: 'Como falar com ele?' },
+const chips: { intent: Exclude<Intent, 'fallback'>; label: string; question: string }[] = [
+  { intent: 'about', label: 'sobre', question: 'Quem é o João?' },
+  { intent: 'ai', label: 'ia', question: 'Como ele constrói com IA?' },
+  { intent: 'projects', label: 'projetos', question: 'Mostre projetos' },
+  { intent: 'stack', label: 'stack', question: 'Qual a stack?' },
+  { intent: 'why', label: 'por que ele', question: 'Por que contratar?' },
+  { intent: 'contact', label: 'contato', question: 'Como falar com ele?' },
 ]
 
-const stackPills = ['React', 'TypeScript', 'Next.js', 'Node.js', 'Supabase', 'Stripe', 'LLMs', 'Agentes', 'MCP', 'n8n']
+const stackPills = ['React', 'TypeScript', 'Next.js', 'Node.js', 'Supabase', 'Stripe', 'LLMs', 'RAG', 'Fine-tuning', 'Agentes', 'MCP', 'Skills', 'Evals', 'n8n']
+
+const aiSteps = ['dados', 'embeddings', 'RAG', 'fine-tuning', 'MCP', 'skills', 'evals', 'produção']
 
 function route(text: string): Intent {
   const t = text.toLowerCase()
+  if (/\bia\b|intelig|rag|fine|tun|llm|agent|mcp|skill|embedd|vetor|eval|modelo|prompt/.test(t)) return 'ai'
   if (/projet|portf|trabalh|case|site/.test(t)) return 'projects'
   if (/stack|tecnolog|skill|linguag|react|node|ferrament/.test(t)) return 'stack'
   if (/contrat|por ?que|diferencial|vaga/.test(t)) return 'why'
@@ -68,6 +73,18 @@ function Extra({ intent }: { intent: Intent }) {
           Ver todos os {projects.length} projetos ↓
         </a>
       </div>
+    )
+  }
+  if (intent === 'ai') {
+    return (
+      <ol className="mt-3 grid grid-cols-3 gap-1 font-mono text-[11px] sm:flex sm:flex-nowrap sm:items-center sm:gap-0.5">
+        {aiSteps.map((step, i) => (
+          <li key={step} className="flex items-center gap-0.5">
+            <span className="w-full whitespace-nowrap rounded border border-emerald-400/25 bg-emerald-400/10 px-1.5 py-0.5 text-center text-emerald-200 sm:w-auto">{step}</span>
+            {i < aiSteps.length - 1 ? <span className="hidden text-zinc-600 sm:inline" aria-hidden="true">→</span> : null}
+          </li>
+        ))}
+      </ol>
     )
   }
   if (intent === 'stack') {
@@ -198,15 +215,18 @@ export function AgentConsole({ instant = false }: { instant?: boolean }) {
       </div>
 
       <div className="border-t border-white/10 px-4 py-3">
-        <div className="mb-3 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none]">
+        <div className="mb-3 flex flex-wrap items-center gap-1.5" role="group" aria-label="Perguntas sugeridas">
+          <span className="mr-1 font-mono text-[11px] text-zinc-600">/ask</span>
           {chips.map((c) => (
             <button
               key={c.intent}
               type="button"
               disabled={busy}
-              onClick={() => ask(c.intent, c.label)}
-              className="shrink-0 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-zinc-300 transition hover:border-emerald-400/60 hover:text-emerald-200 disabled:opacity-40"
+              onClick={() => ask(c.intent, c.question)}
+              title={c.question}
+              className="whitespace-nowrap rounded-md border border-white/10 bg-white/[0.03] px-2.5 py-1 font-mono text-[11px] text-zinc-300 transition hover:border-emerald-400/60 hover:bg-emerald-400/[0.06] hover:text-emerald-200 disabled:cursor-not-allowed disabled:opacity-40"
             >
+              <span className="text-emerald-400/70">#</span>
               {c.label}
             </button>
           ))}

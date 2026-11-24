@@ -59,11 +59,14 @@ export function About() {
                 organizado e fácil de evoluir.
               </p>
               <p>
-                Como Engenheiro de IA, levo modelos de linguagem para dentro do
-                produto: integro APIs de LLMs, desenho agentes e automações, escrevo
-                prompts que funcionam em produção e conecto ferramentas via MCP. A
-                ideia é sempre a mesma — IA resolvendo um problema real do usuário,
-                não enfeite.
+                Como Engenheiro de IA, trabalho o ciclo inteiro de um sistema
+                inteligente. Preparo os dados e monto RAG com embeddings e banco
+                vetorial para o modelo responder com base em fonte real. Escolho
+                entre prompt, RAG ou fine-tuning pelo custo e pela precisão de cada
+                caso. Dou ação aos agentes com tool calling, servidores MCP e skills
+                reutilizáveis, e fecho com evals, guardrails e observabilidade de
+                custo, latência e qualidade. O resultado é IA confiável em produção,
+                resolvendo problema real, não enfeite.
               </p>
               <p>
                 Já entreguei do site institucional ao sistema com pagamento,

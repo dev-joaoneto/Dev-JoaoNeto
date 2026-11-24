@@ -34,6 +34,7 @@ export interface LanyardProps {
   strapImage?: string;
   strapColor?: string;
   strapWidth?: number;
+  strapSingle?: boolean;
   metal?: Metal;
   gravity?: number;
   damping?: number;
@@ -59,6 +60,7 @@ interface Settings {
   strapImage?: string;
   strapColor: string;
   strapWidth: number;
+  strapSingle: boolean;
   metal: Metal;
   gravity: number;
   damping: number;
@@ -599,8 +601,26 @@ const paintFace = (canvas: HTMLCanvasElement, image: HTMLImageElement | null, co
   if (image) drawFitted(ctx, image, canvas.width, canvas.height, fit);
 };
 
-const paintStrap = (canvas: HTMLCanvasElement, image: HTMLImageElement | null, color: Rgb) => {
+const paintStrap = (canvas: HTMLCanvasElement, image: HTMLImageElement | null, color: Rgb, single = 0) => {
   const across = 192;
+  if (image && single > 0) {
+    // uma única arte centralizada no cordão; a primeira coluna da imagem preenche o resto
+    const along = Math.max(64, Math.round(single * across));
+    const art = Math.min(along, Math.round((image.width / image.height) * across));
+    canvas.width = across;
+    canvas.height = along;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return single;
+    ctx.fillStyle = toCss(color);
+    ctx.fillRect(0, 0, across, along);
+    ctx.save();
+    ctx.translate(across, 0);
+    ctx.rotate(Math.PI / 2);
+    ctx.drawImage(image, 0, 0, 1, image.height, 0, 0, along, across);
+    ctx.drawImage(image, (along - art) / 2, 0, art, across);
+    ctx.restore();
+    return along / across;
+  }
   const along = image ? Math.max(64, Math.round((image.width / image.height) * across)) : across * 2;
   canvas.width = across;
   canvas.height = along;
@@ -883,6 +903,7 @@ const Lanyard = ({
   strapImage,
   strapColor = '#111111',
   strapWidth = 0.65,
+  strapSingle = false,
   metal = 'silver',
   gravity = 1,
   damping = 0.5,
@@ -911,6 +932,7 @@ const Lanyard = ({
     strapImage,
     strapColor,
     strapWidth,
+    strapSingle,
     metal,
     gravity,
     damping,
@@ -1072,7 +1094,8 @@ const Lanyard = ({
 
     const repaintStrap = () => {
       const s = settingsRef.current!;
-      tileRatio = paintStrap(strapCanvas, images.strap, parseColor(s.strapColor, [0.07, 0.07, 0.07]));
+      const single = s.strapSingle ? (sim.rest * JOINTS) / strapScale : 0;
+      tileRatio = paintStrap(strapCanvas, images.strap, parseColor(s.strapColor, [0.07, 0.07, 0.07]), single);
       weave.repeat.set(2, 2 * tileRatio);
       strapTexture.dispose();
       strapTexture.needsUpdate = true;
@@ -1218,7 +1241,9 @@ const Lanyard = ({
       const uv = bandGeometry.getAttribute('uv');
       const columns = BAND_COLUMNS.length;
       const restLength = sim.rest * JOINTS;
-      const repeats = restLength / (strapScale * tileRatio);
+      const single = settingsRef.current!.strapSingle;
+      if (single && images.strap && Math.abs(tileRatio * strapScale - restLength) > restLength * 0.02) repaintStrap();
+      const repeats = single ? 1 : restLength / (strapScale * tileRatio);
       const width = strapScale / Math.pow(Math.max(1, length / Math.max(restLength, 0.001)), 0.35);
       const { tangent, toCamera, across, facing } = work;
       for (let i = 0; i < SAMPLES; i++) {
