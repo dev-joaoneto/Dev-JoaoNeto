@@ -106,7 +106,9 @@ export function BriefConsole({ onType }: { onType: () => void }) {
     run(text)
   }
 
-  const draft = brief ? `Olá, João! Vim pelo seu portfólio.\n\n${asked}\n\nTipo: ${brief.label}. Podemos conversar?` : ''
+  // a mensagem é do visitante: o pedido dele, com começo e fim de conversa, sem rótulo de sistema
+  const request = asked ? asked.charAt(0).toUpperCase() + asked.slice(1) + (/[.!?]$/.test(asked) ? '' : '.') : ''
+  const draft = brief ? `Oi, João, tudo bem? Vi seu portfólio e queria falar com você sobre uma ideia.\n\n${request}\n\nPodemos conversar?` : ''
   const related = brief ? projects.filter((p) => brief.related.includes(p.title)) : []
 
   return (
@@ -227,7 +229,7 @@ export function BriefConsole({ onType }: { onType: () => void }) {
                 Enviar pelo WhatsApp
               </a>
               <a
-                href={`mailto:${profile.email}?subject=${encodeURIComponent(`Portfólio: ${brief.label}`)}&body=${encodeURIComponent(draft)}`}
+                href={`mailto:${profile.email}?subject=${encodeURIComponent('Contato pelo portfólio')}&body=${encodeURIComponent(draft)}`}
                 className="inline-flex min-h-11 items-center rounded-md border border-white/10 bg-white/[0.03] px-4 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-emerald-400/60 hover:text-emerald-200"
               >
                 Enviar por e-mail

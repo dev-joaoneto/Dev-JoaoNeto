@@ -35,7 +35,8 @@ const borderMask: CSSProperties = {
 const tiltTransform =
   'perspective(900px) rotateX(calc(var(--py, 0) * -1 * var(--tilt))) rotateY(calc(var(--px, 0) * var(--tilt))) scale(var(--lift, 1))'
 // conteúdo anda um pouco na direção do cursor, como se estivesse à frente do fundo
-const parallax = 'translate3d(calc(var(--px, 0) * 4px), calc(var(--py, 0) * 4px), 0)'
+// deslocamento proporcional ao tamanho do card: no tile grande, 4px sumiriam
+const parallax = 'translate3d(calc(var(--px, 0) * var(--depth, 4px)), calc(var(--py, 0) * var(--depth, 4px)), 0)'
 
 const calm = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
@@ -81,7 +82,7 @@ function Tile({ group, onOpen }: { group: Group; onOpen: (key: string, el: HTMLE
       onPointerLeave={resetPointer}
       onClick={(e) => onOpen(group.key, e.currentTarget)}
       aria-haspopup="dialog"
-      style={{ '--tilt': big ? '3.5deg' : '7deg', transform: tiltTransform } as CSSProperties}
+      style={{ '--tilt': '7deg', '--depth': big ? '10px' : '4px', transform: tiltTransform } as CSSProperties}
       className={`group/tile relative isolate flex min-h-[180px] flex-col overflow-hidden rounded-xl border border-white/10 bg-[linear-gradient(180deg,#101012_0%,#0a0a0b_45%,#070708_100%)] p-5 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.07),inset_0_-28px_48px_rgba(0,0,0,0.4),0_20px_40px_-26px_rgba(0,0,0,0.95)] transition-[transform,translate,box-shadow,border-color] duration-500 ease-out will-change-transform hover:-translate-y-0.5 hover:border-white/15 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.09),inset_0_-28px_48px_rgba(0,0,0,0.4),0_30px_60px_-30px_rgba(16,185,129,0.28)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400 motion-reduce:transition-none sm:p-6 ${layout[group.key] ?? ''}`}
     >
       {/* luz que segue o cursor */}
@@ -169,7 +170,7 @@ function Panel({ openKey, onSwitch, onClose }: { openKey: string; onSwitch: (key
       labelledBy="skills-panel-title"
       onClose={onClose}
       toolbar={
-        <div className="flex gap-1.5 overflow-x-auto border-b border-white/10 px-5 py-3 [scrollbar-width:none]" role="tablist" aria-label="Grupos de skills">
+        <div className="flex shrink-0 gap-1.5 overflow-x-auto border-b border-white/10 px-5 py-3 [scrollbar-width:none]" role="tablist" aria-label="Grupos de skills">
           {skills.map((g) => (
             <button
               key={g.key}
@@ -177,7 +178,7 @@ function Panel({ openKey, onSwitch, onClose }: { openKey: string; onSwitch: (key
               role="tab"
               aria-selected={g.key === group.key}
               onClick={() => onSwitch(g.key)}
-              className={`shrink-0 rounded-md border px-2.5 py-1 font-mono text-[11px] transition ${
+              className={`inline-flex shrink-0 items-center justify-center rounded-md border px-2.5 py-1 font-mono text-[11px] leading-4 transition ${
                 g.key === group.key
                   ? 'border-emerald-400/50 bg-emerald-400/10 text-emerald-200'
                   : 'border-white/10 text-zinc-400 hover:border-white/25 hover:text-white'

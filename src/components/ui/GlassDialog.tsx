@@ -57,7 +57,7 @@ export function GlassDialog({ scheme, path, labelledBy, onClose, toolbar, childr
           shown ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-6 scale-[0.98] opacity-0'
         }`}
       >
-        <div className="flex items-center justify-between gap-3 border-b border-white/10 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.14em]">
+        <div className="flex shrink-0 items-center justify-between gap-3 border-b border-white/10 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.14em]">
           <span className="truncate text-zinc-500">
             {scheme}://<span className="text-white">{path}</span>
           </span>

@@ -19,7 +19,7 @@ export function About() {
           <div
             onPointerEnter={(e) => e.pointerType === 'mouse' && setReveal(true)}
             onPointerLeave={() => setReveal(false)}
-            className="relative min-h-[360px] overflow-hidden rounded-lg border border-emerald-400/20 bg-zinc-950 lg:min-h-full">
+            className="relative mx-auto aspect-[4/5] w-full max-w-[420px] overflow-hidden rounded-lg border border-emerald-400/20 bg-zinc-950 lg:mx-0 lg:aspect-auto lg:min-h-full lg:max-w-none">
             <img
               src={profileImage}
               alt={`Foto de ${profile.name}, ${profile.role.toLowerCase()}`}
