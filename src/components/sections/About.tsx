@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { profile } from '../../data/portfolio'
 import { useMotionOk } from '../../hooks/useMotionOk'
 import { DotPortrait } from '../effects/DotPortrait'
@@ -5,6 +6,7 @@ import profileImage from '/assets/foto-perfil.webp'
 
 export function About() {
   const showDots = useMotionOk(768)
+  const [reveal, setReveal] = useState(false)
 
   return (
     <section
@@ -14,7 +16,10 @@ export function About() {
       <div className="absolute inset-x-0 bottom-0 -z-10 h-px bg-gradient-to-r from-transparent via-emerald-400/40 to-transparent" />
       <div className="mx-auto flex min-h-[min(780px,calc(100vh-8rem))] w-full max-w-5xl items-center">
         <div className="grid h-full w-full gap-5 lg:grid-cols-[0.82fr_1.18fr]">
-          <div className="group relative min-h-[360px] overflow-hidden rounded-lg border border-emerald-400/20 bg-zinc-950 lg:min-h-full">
+          <div
+            onPointerEnter={(e) => e.pointerType === 'mouse' && setReveal(true)}
+            onPointerLeave={() => setReveal(false)}
+            className="relative min-h-[360px] overflow-hidden rounded-lg border border-emerald-400/20 bg-zinc-950 lg:min-h-full">
             <img
               src={profileImage}
               alt={`Foto de ${profile.name}, ${profile.role.toLowerCase()}`}
@@ -22,19 +27,23 @@ export function About() {
               decoding="async"
               className={`absolute inset-0 h-full w-full object-cover object-top ${
                 showDots
-                  ? // entrada: aparece rápido; saída: segura a foto enquanto os pontos voltam por cima
-                    'opacity-0 transition-opacity delay-[450ms] duration-[700ms] ease-in-out group-hover:opacity-95 group-hover:delay-0 group-hover:duration-[450ms] group-hover:ease-out'
+                  ? // entrada: pontos se dispersam e a foto surge; saída: a foto se dissolve enquanto o retrato se remonta
+                    `transition-opacity ease-in-out ${reveal ? 'opacity-95 duration-[600ms]' : 'opacity-0 duration-[900ms]'}`
                   : 'opacity-95'
               }`}
             />
             {showDots ? (
-              <div className="absolute inset-0 transition-opacity duration-[900ms] ease-out group-hover:opacity-0 group-hover:duration-[350ms] group-hover:ease-in">
-                <DotPortrait src={profileImage} alt="" gap={6} />
+              <div
+                className={`absolute inset-0 transition-opacity ease-in-out ${
+                  reveal ? 'opacity-0 duration-[550ms]' : 'opacity-100 duration-[700ms]'
+                }`}
+              >
+                <DotPortrait src={profileImage} alt="" gap={6} scattered={reveal} />
               </div>
             ) : null}
             <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_35%_20%,rgba(52,211,153,0.18),transparent_34%),linear-gradient(180deg,rgba(24,24,27,0),rgba(0,0,0,0.72))]" />
             {showDots ? (
-              <span className="pointer-events-none absolute left-4 top-4 z-20 font-mono text-[10px] uppercase tracking-[0.3em] text-emerald-300/70 transition-opacity delay-500 duration-500 group-hover:opacity-0 group-hover:delay-0 group-hover:duration-200">
+              <span className={`pointer-events-none absolute left-4 top-4 z-20 font-mono text-[10px] uppercase tracking-[0.3em] text-emerald-300/70 transition-opacity ${reveal ? 'opacity-0 duration-200' : 'opacity-100 delay-700 duration-500'}`}>
                 passe o mouse para ver a foto
               </span>
             ) : null}

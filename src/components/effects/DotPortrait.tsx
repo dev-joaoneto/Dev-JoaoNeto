@@ -5,13 +5,20 @@ type DotPortraitProps = {
   alt: string
   gap?: number
   className?: string
+  /** true dispersa os pontos (foto à mostra); false remonta o retrato */
+  scattered?: boolean
 }
 
 type Dot = { x: number; y: number; r: number; lum: number; sx: number; sy: number; ox: number; oy: number }
 
 // DGX:ANCHOR: dot-portrait
-export function DotPortrait({ src, alt, gap = 6, className = '' }: DotPortraitProps) {
+export function DotPortrait({ src, alt, gap = 6, className = '', scattered = false }: DotPortraitProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const setTargetRef = useRef<(scatter: boolean) => void>(() => {})
+
+  useEffect(() => {
+    setTargetRef.current(scattered)
+  }, [scattered])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -25,8 +32,9 @@ export function DotPortrait({ src, alt, gap = 6, className = '' }: DotPortraitPr
 
     let dots: Dot[] = []
     let raf = 0
-    let start = 0
     let started = false
+    // p: 0 = retrato montado, 1 = pontos dispersos; anima de from para to
+    const tween = { from: 1, to: 0, start: 0, duration: 1600, amp: 1, p: 1 }
     let alive = true
     const pointer = { x: -9999, y: -9999 }
     let width = 0
@@ -79,15 +87,18 @@ export function DotPortrait({ src, alt, gap = 6, className = '' }: DotPortraitPr
 
     function draw(now: number) {
       if (!alive) return
-      if (!start) start = now
-      const t = reduced ? 1 : Math.min(1, (now - start) / 1600)
-      const ease = 1 - Math.pow(1 - t, 3)
+      if (!tween.start) tween.start = now
+      const t = reduced ? 1 : Math.min(1, (now - tween.start) / tween.duration)
+      // remontar desacelera no fim; dispersar acelera no começo
+      const ease = tween.to < tween.from ? 1 - Math.pow(1 - t, 3) : t * t * (3 - 2 * t)
+      tween.p = tween.from + (tween.to - tween.from) * ease
+      const k = tween.p * tween.amp
       ctx!.clearRect(0, 0, width, height)
       let moving = t < 1
 
       for (const d of dots) {
-        const bx = d.sx + (d.x - d.sx) * ease
-        const by = d.sy + (d.y - d.sy) * ease
+        const bx = d.x + (d.sx - d.x) * k
+        const by = d.y + (d.sy - d.y) * k
         if (!reduced) {
           const dx = bx - pointer.x
           const dy = by - pointer.y
@@ -115,6 +126,18 @@ export function DotPortrait({ src, alt, gap = 6, className = '' }: DotPortraitPr
       if (!raf && started) raf = requestAnimationFrame(draw)
     }
 
+    setTargetRef.current = (scatter: boolean) => {
+      const to = scatter ? 1 : 0
+      if (tween.to === to) return
+      // depois da entrada inicial, o hover dispersa menos que a abertura
+      if (tween.p < 0.01) tween.amp = 0.45
+      tween.from = tween.p
+      tween.to = to
+      tween.start = 0
+      tween.duration = scatter ? 650 : 1100
+      wake()
+    }
+
     const io = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting && !started && dots.length) {
         started = true
@@ -137,7 +160,7 @@ export function DotPortrait({ src, alt, gap = 6, className = '' }: DotPortraitPr
     const ro = new ResizeObserver(() => {
       build()
       if (started) {
-        start = performance.now() - 1600
+        tween.start = performance.now() - tween.duration
         wake()
       }
     })
@@ -152,6 +175,7 @@ export function DotPortrait({ src, alt, gap = 6, className = '' }: DotPortraitPr
 
     return () => {
       alive = false
+      setTargetRef.current = () => {}
       cancelAnimationFrame(raf)
       io.disconnect()
       ro.disconnect()
