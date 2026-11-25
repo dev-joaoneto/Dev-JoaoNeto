@@ -1,4 +1,4 @@
-﻿import spendnote from '/assets/spendnote.webp'
+import spendnote from '/assets/spendnote.webp'
 import devburguer from '/assets/dev-burguer.webp'
 import iphone from '/assets/iphone17.webp'
 import wagner from '/assets/wagner-adv.webp'
@@ -8,7 +8,6 @@ import digytron from '/assets/digytron.webp'
 export const profile = {
   name: 'João Neto',
   role: 'Desenvolvedor Full Stack & Engenheiro de IA',
-  shortRole: 'Full Stack & IA',
   whatsappUrl: 'https://contate.me/5561986366632',
   resumeUrl: '/docs/joao-neto-curriculo.pdf',
   email: 'joaonetodevops@gmail.com',
@@ -26,17 +25,14 @@ export const socialLinks = [
   {
     label: 'GitHub',
     href: 'https://github.com/Dev-JoaoNeto',
-    className: 'text-zinc-300!',
   },
   {
     label: 'LinkedIn',
     href: 'https://www.linkedin.com/in/joao-neto-dev/',
-    className: 'text-blue-400!',
   },
   {
     label: 'E-mail',
     href: 'https://mail.google.com/mail/?view=cm&fs=1&to=joaonetodevops@gmail.com',
-    className: 'text-red-500!',
   },
 ]
 
@@ -155,7 +151,6 @@ export type Project = {
   fullImageUrl?: string
   /** gravação real da página rolando; toca no hover do card */
   video?: { webm: string; mp4: string; poster: string }
-  imageFit?: 'cover' | 'contain'
   ai?: { flow: string[]; points: string[] }
 }
 

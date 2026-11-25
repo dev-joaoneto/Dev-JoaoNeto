@@ -45,6 +45,8 @@ export function NeuralField({ signal, className = '' }: { signal: number; classN
         vy: (Math.random() - 0.5) * 6,
         glow: 0,
       }))
+      // a rede mudou de tamanho: pulsos antigos apontariam para nós que não existem mais
+      pulses.length = 0
       link()
     }
 
@@ -96,6 +98,10 @@ export function NeuralField({ signal, className = '' }: { signal: number; classN
         p.t += dt * 2.6
         const a = nodes[p.from]
         const b = nodes[p.to]
+        if (!a || !b) {
+          pulses.splice(k, 1)
+          continue
+        }
         if (p.t >= 1) {
           b.glow = 1
           pulses.splice(k, 1)

@@ -1,4 +1,4 @@
-﻿@import "tailwindcss";
+@import "tailwindcss";
 
 :root {
   --color-bg: #050505;
@@ -134,25 +134,6 @@ a {
   opacity: 1;
 }
 
-.project-carousel {
-  scrollbar-color: rgba(52, 211, 153, 0.5) rgba(255, 255, 255, 0.08);
-  scrollbar-width: thin;
-}
-
-.project-carousel::-webkit-scrollbar {
-  height: 8px;
-}
-
-.project-carousel::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 999px;
-}
-
-.project-carousel::-webkit-scrollbar-thumb {
-  background: rgba(52, 211, 153, 0.55);
-  border-radius: 999px;
-}
-
 @keyframes skill-in {
   from {
     opacity: 0;
@@ -161,6 +142,15 @@ a {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes signal-run {
+  from {
+    left: -30%;
+  }
+  to {
+    left: 100%;
   }
 }
 
