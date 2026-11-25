@@ -18,6 +18,7 @@ export const navLinks = [
   { label: 'Sobre', href: '#about' },
   { label: 'Skills', href: '#skills' },
   { label: 'Projetos', href: '#projects' },
+  { label: 'Trajetória', href: '#journey' },
   { label: 'Contato', href: '#contact' },
 ]
 
@@ -242,4 +243,88 @@ export const projects: Project[] = [
     liveUrl: 'https://dev-joaoneto.github.io/projeto-iphone17/',
     imageUrl: iphone,
   },
+]
+
+export type Experience = {
+  period: string
+  current?: boolean
+  title: string
+  org: string
+  badge?: string
+  groups?: { label: string; points: string[] }[]
+  points?: string[]
+  steps?: { period: string; role: string; detail: string }[]
+  metric?: { value: string; label: string }
+  tags?: string[]
+}
+
+export const experience: Experience[] = [
+  {
+    period: '09/2025 — atual',
+    current: true,
+    title: 'Programador Web Full Stack & Engenheiro de IA',
+    org: 'Freelancer · autônomo',
+    groups: [
+      {
+        label: 'Engenharia de IA',
+        points: [
+          'Agentes com RAG (embeddings e banco vetorial), tool calling e servidores MCP.',
+          'IA generativa em produção, como a Digytron Lecion, que gera provas e planos de aula com OpenAI.',
+          'Evals, guardrails e monitoramento de custo, latência e qualidade.',
+        ],
+      },
+      {
+        label: 'Web full stack',
+        points: [
+          'Aplicações web responsivas e PWAs em React, com foco em performance.',
+          'Back-end em Node.js e Express, integração de APIs e sistemas administrativos.',
+        ],
+      },
+    ],
+    tags: ['OpenAI', 'RAG', 'MCP', 'React', 'TypeScript', 'Node.js'],
+  },
+  {
+    period: '04/2025 — atual',
+    current: true,
+    title: 'Gerente Operacional',
+    org: 'Fiv5 Stream · provedor de internet',
+    points: [
+      'Responsável pela área técnica, estoque, COP e NOC.',
+      'Treinamento da equipe técnica para um atendimento profissional e atualização das tecnologias do setor.',
+    ],
+    metric: { value: '40 a 80', label: 'novos clientes por mês' },
+  },
+  {
+    period: '09/2023 — 03/2025',
+    title: 'De técnico a Gerente Operacional',
+    org: 'BSB Internet · provedor de internet',
+    badge: '3 cargos em 18 meses',
+    steps: [
+      { period: '09/2023 — 03/2024', role: 'Técnico FTTH', detail: 'instalação, reparo, roteadores, rede mesh, RouterBoards e switches' },
+      { period: '03/2024 — 07/2024', role: 'Supervisor técnico', detail: 'instalação, manutenção e infraestrutura' },
+      { period: '07/2024 — 03/2025', role: 'Gerente Operacional', detail: 'área técnica, estoque, COP e NOC' },
+    ],
+    metric: { value: '100 a 120', label: 'novos clientes por mês' },
+  },
+]
+
+export const education = [
+  { course: 'Formação Programador', school: 'DevClub', year: '2025' },
+  { course: 'Pós-graduação em Gestão de Serviços de TI', school: 'FATAP', year: '2022' },
+  { course: 'Análise e Desenvolvimento de Sistemas', school: 'FATAP', year: '2021' },
+]
+
+export const aiCourses = [
+  { school: 'FGV', name: 'IA Generativa e ChatGPT' },
+  { school: 'FGV', name: 'Introdução à IA' },
+  { school: 'FGV', name: 'IA em Sala de Aula' },
+  { school: 'Santander', name: 'Fundamentos do ChatGPT' },
+  { school: 'Santander', name: 'Prompting Responsável' },
+]
+
+export const availability = [
+  { label: 'Inglês', value: 'Intermediário' },
+  { label: 'Espanhol', value: 'Intermediário' },
+  { label: 'Base', value: 'Valparaíso de Goiás, GO · entorno de Brasília' },
+  { label: 'Mobilidade', value: 'Disponível para viagens e mudança para qualquer país' },
 ]

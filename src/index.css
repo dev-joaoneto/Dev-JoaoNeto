@@ -154,6 +154,15 @@ a {
   }
 }
 
+@keyframes signal-drop {
+  from {
+    top: -30%;
+  }
+  to {
+    top: 100%;
+  }
+}
+
 @keyframes signal-sweep {
   from {
     background-position: 100% 0;
