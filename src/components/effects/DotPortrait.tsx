@@ -9,7 +9,18 @@ type DotPortraitProps = {
   scattered?: boolean
 }
 
-type Dot = { x: number; y: number; r: number; lum: number; sx: number; sy: number; ox: number; oy: number }
+type Dot = { x: number; y: number; r: number; lum: number; tone: number; sx: number; sy: number; ox: number; oy: number }
+
+// cores pré-montadas em faixas de brilho: o quadro desenha um path por faixa, não um fill por ponto
+const LEVELS = 8
+const TONES = Array.from({ length: LEVELS * 2 }, (_, k) => {
+  const bright = k >= LEVELS
+  const band = ((k % LEVELS) + 0.5) / LEVELS
+  // mesmo alfa da fórmula original, no meio de cada faixa de luminância
+  return bright
+    ? `rgba(167, 243, 208, ${(0.55 + (0.55 + band * 0.45) * 0.45).toFixed(3)})`
+    : `rgba(52, 211, 153, ${(0.25 + (0.07 + band * 0.48) * 0.7).toFixed(3)})`
+})
 
 // DGX:ANCHOR: dot-portrait
 export function DotPortrait({ src, alt, gap = 6, className = '', scattered = false }: DotPortraitProps) {
@@ -71,11 +82,15 @@ export function DotPortrait({ src, alt, gap = 6, className = '', scattered = fal
           if (lum < 0.07) continue
           const px = x * gap + gap / 2
           const py = y * gap + gap / 2
+          const bright = lum > 0.55
+          // faixa dentro do intervalo de cada cor (escuro: 0.07–0.55, claro: 0.55–1)
+          const band = bright ? (lum - 0.55) / 0.45 : (lum - 0.07) / 0.48
           dots.push({
             x: px,
             y: py,
             r: Math.max(0.5, lum * gap * 0.55),
             lum,
+            tone: (bright ? LEVELS : 0) + Math.min(LEVELS - 1, Math.max(0, Math.floor(band * LEVELS))),
             sx: px + (Math.random() - 0.5) * width * 0.9,
             sy: py + (Math.random() - 0.5) * height * 0.9,
             ox: 0,
@@ -95,6 +110,7 @@ export function DotPortrait({ src, alt, gap = 6, className = '', scattered = fal
       const k = tween.p * tween.amp
       ctx!.clearRect(0, 0, width, height)
       let moving = t < 1
+      const paths = TONES.map(() => new Path2D())
 
       for (const d of dots) {
         const bx = d.x + (d.sx - d.x) * k
@@ -102,22 +118,29 @@ export function DotPortrait({ src, alt, gap = 6, className = '', scattered = fal
         if (!reduced) {
           const dx = bx - pointer.x
           const dy = by - pointer.y
-          const dist = Math.hypot(dx, dy)
+          const near = Math.abs(dx) < 70 && Math.abs(dy) < 70
+          const dist = near ? Math.hypot(dx, dy) : 999
           const push = dist < 70 ? (1 - dist / 70) * 14 : 0
-          const tx = dist ? (dx / dist) * push : 0
-          const ty = dist ? (dy / dist) * push : 0
-          d.ox += (tx - d.ox) * 0.15
-          d.oy += (ty - d.oy) * 0.15
-          if (Math.abs(d.ox) + Math.abs(d.oy) > 0.05) moving = true
+          const tx = push ? (dx / dist) * push : 0
+          const ty = push ? (dy / dist) * push : 0
+          if (tx || ty || d.ox || d.oy) {
+            d.ox += (tx - d.ox) * 0.15
+            d.oy += (ty - d.oy) * 0.15
+            if (Math.abs(d.ox) + Math.abs(d.oy) > 0.05) moving = true
+            else if (!tx && !ty) d.ox = d.oy = 0
+          }
         }
-        const bright = d.lum > 0.55
-        ctx!.fillStyle = bright
-          ? `rgba(167, 243, 208, ${0.55 + d.lum * 0.45})`
-          : `rgba(52, 211, 153, ${0.25 + d.lum * 0.7})`
-        ctx!.beginPath()
-        ctx!.arc(bx + d.ox, by + d.oy, d.r, 0, Math.PI * 2)
-        ctx!.fill()
+        const x = bx + d.ox
+        const y = by + d.oy
+        const path = paths[d.tone]
+        path.moveTo(x + d.r, y)
+        path.arc(x, y, d.r, 0, Math.PI * 2)
       }
+
+      paths.forEach((path, i) => {
+        ctx!.fillStyle = TONES[i]
+        ctx!.fill(path)
+      })
 
       raf = moving ? requestAnimationFrame(draw) : 0
     }

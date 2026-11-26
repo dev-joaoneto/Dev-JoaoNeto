@@ -196,6 +196,8 @@ const FINISHES: Record<string, FinishLook> = {
 const BAND_COLUMNS = [0, 0.07, 0.93, 1];
 const BAND_BEND = [-0.95, -0.28, 0.28, 0.95];
 const FLIP_SPIN = 9;
+const BREEZE_SECONDS = 7;
+const BREEZE_FADE = 2.5;
 
 const FOIL_VERTEX_HEAD = `
 varying vec2 vFoilUv;
@@ -886,7 +888,8 @@ const stepSimulation = (sim: Simulation, dt: number, physics: Physics, time: num
 
   let energy = body.velocity.lengthSq() + body.angular.lengthSq() * 0.3;
   for (let i = 1; i < JOINTS; i++) energy += velocities[i].lengthSq() * 0.05;
-  sim.calm = energy < 2e-4 ? sim.calm + dt : 0;
+  // abaixo disso o balanço é imperceptível (menos de 0,05 unidade por segundo): conta como parado
+  sim.calm = energy < 2e-3 ? sim.calm + dt : 0;
 };
 
 const Lanyard = ({
@@ -1064,6 +1067,8 @@ const Lanyard = ({
     let raf = 0;
     let last = performance.now();
     let time = 0;
+    // o vento sopra por alguns segundos depois de cada despertar e some, deixando o crachá dormir parado
+    let breezeUntil = BREEZE_SECONDS;
     let visible = true;
     let alive = true;
     let placed = false;
@@ -1317,7 +1322,7 @@ const Lanyard = ({
         twistDamping: 3,
         grip: 40,
         gripDamping: 6,
-        breeze: reducedMotion ? 0 : clamp(s.breeze, 0, 1)
+        breeze: reducedMotion ? 0 : clamp(s.breeze, 0, 1) * clamp((breezeUntil - time) / BREEZE_FADE, 0, 1)
       };
     };
 
@@ -1342,6 +1347,7 @@ const Lanyard = ({
     const start = () => {
       if (raf || !visible || !alive) return;
       sim.calm = 0;
+      breezeUntil = time + BREEZE_SECONDS;
       last = performance.now();
       raf = requestAnimationFrame(tick);
     };
@@ -1447,10 +1453,14 @@ const Lanyard = ({
 
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(container);
-    const intersectionObserver = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting;
-      if (visible) start();
-    });
+    // com menos de um quarto do crachá na tela, a simulação para
+    const intersectionObserver = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting && entry.intersectionRatio >= 0.25;
+        if (visible) start();
+      },
+      { threshold: [0, 0.25] }
+    );
     intersectionObserver.observe(container);
     const onVisibility = () => {
       if (!document.hidden) start();

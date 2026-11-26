@@ -20,7 +20,11 @@ export function NeuralField({ signal, className = '' }: { signal: number; classN
     const ctx = canvas?.getContext('2d')
     if (!canvas || !ctx) return
     const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const dpr = Math.min(window.devicePixelRatio, 2)
+    // celular e touch: 1 pixel por ponto (a rede é fina e fica atrás de uma máscara, ninguém vê a diferença)
+    const lite = window.matchMedia('(max-width: 767px), (pointer: coarse)').matches
+    const dpr = lite ? 1 : Math.min(window.devicePixelRatio, 2)
+    // parada, a rede só deriva: poucos quadros bastam; com pulso correndo, taxa cheia
+    const idleStep = 1000 / (lite ? 20 : 30)
     let width = 0
     let height = 0
     let nodes: Node[] = []
@@ -37,7 +41,7 @@ export function NeuralField({ signal, className = '' }: { signal: number; classN
       canvas.width = width * dpr
       canvas.height = height * dpr
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-      const count = Math.round(Math.min(90, Math.max(28, (width * height) / 16000)))
+      const count = Math.round(Math.min(lite ? 48 : 90, Math.max(24, (width * height) / (lite ? 20000 : 16000))))
       nodes = Array.from({ length: count }, () => ({
         x: Math.random() * width,
         y: Math.random() * height,
@@ -64,6 +68,11 @@ export function NeuralField({ signal, className = '' }: { signal: number; classN
 
     const draw = (now: number) => {
       raf = 0
+      const busy = pulses.length > 0 || nodes.some((n) => n.glow > 0)
+      if (!busy && last && now - last < idleStep) {
+        if (!calm && visible) raf = requestAnimationFrame(draw)
+        return
+      }
       const dt = Math.min(0.05, (now - (last || now)) / 1000)
       last = now
       ctx.clearRect(0, 0, width, height)

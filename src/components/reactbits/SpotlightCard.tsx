@@ -204,7 +204,8 @@ const SpotlightCard = ({
         ty += (rect.height * (0.5 + 0.3 * Math.sin(state.time * 0.61 + 1.3)) - ty) * (drift / 0.6);
         target = 0.6;
       }
-      if (state.presence < 0.02 && target > 0 && !s.ambient) {
+      // apagado (ou acendendo do zero), a luz vai direto para o ponto: não há o que suavizar a cada quadro
+      if (state.presence < 0.02 && (target > 0 || state.presence === 0) && !s.ambient) {
         state.x = tx;
         state.y = ty;
       }
@@ -234,6 +235,8 @@ const SpotlightCard = ({
       pointer.x = event.clientX;
       pointer.y = event.clientY;
       pointer.active = true;
+      // fora da tela e apagado, o card não acorda a cada movimento do mouse na página
+      if (!state.visible && state.presence === 0) return;
       if (state.presence > 0 || settingsRef.current.proximity > 0 || root.contains(event.target as Node | null)) wake();
     };
     const onOut = (event: PointerEvent) => {
@@ -265,7 +268,7 @@ const SpotlightCard = ({
       wake();
     };
     const onScroll = () => {
-      if (pointer.active || state.presence > 0) wake();
+      if (state.presence > 0 || (pointer.active && state.visible)) wake();
     };
 
     const observer = new IntersectionObserver(entries => {

@@ -38,7 +38,7 @@ export function About() {
                   reveal ? 'opacity-0 duration-[550ms]' : 'opacity-100 duration-[700ms]'
                 }`}
               >
-                <DotPortrait src={profileImage} alt="" gap={6} scattered={reveal} />
+                <DotPortrait src={profileImage} alt="" gap={7} scattered={reveal} />
               </div>
             ) : null}
             <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_35%_20%,rgba(52,211,153,0.18),transparent_34%),linear-gradient(180deg,rgba(24,24,27,0),rgba(0,0,0,0.72))]" />

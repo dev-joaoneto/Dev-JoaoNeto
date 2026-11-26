@@ -4,6 +4,7 @@ import { GlassDialog } from '../ui/GlassDialog'
 import { AiFlow, KindBadge, ProjectCard, ProjectMobileCard } from '../ui/ProjectCard'
 import { SectionHeading } from '../ui/SectionHeading'
 import { Button } from '../ui/Button'
+import { useMedia } from '../../hooks/useMedia'
 
 const slug = (title: string) =>
   title
@@ -18,42 +19,56 @@ const STEP = 14 // cada card seguinte gruda um pouco mais abaixo, deixando a bor
 
 /** desktop: pilha que comprime; o card de trás encolhe e escurece quando o próximo chega */
 function DesktopStack({ onDetails }: { onDetails: (p: Project) => void }) {
+  const root = useRef<HTMLDivElement>(null)
   const wrappers = useRef<(HTMLDivElement | null)[]>([])
   const inners = useRef<(HTMLDivElement | null)[]>([])
+  const shades = useRef<(HTMLDivElement | null)[]>([])
   const [active, setActive] = useState(0)
 
   useEffect(() => {
     const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     let raf = 0
+    let inView = false
     const update = () => {
       raf = 0
+      // primeiro todas as leituras de layout, depois todas as escritas: um único cálculo de layout por quadro
+      const tops = wrappers.current.map((wrapper) => (wrapper ? wrapper.getBoundingClientRect().top : null))
+      const heights = inners.current.map((inner) => (inner ? inner.offsetHeight : 0))
+      const half = window.innerHeight * 0.5
       let current = 0
-      wrappers.current.forEach((wrapper, i) => {
-        if (!wrapper) return
-        const rect = wrapper.getBoundingClientRect()
-        if (rect.top < window.innerHeight * 0.5) current = i
-        const inner = inners.current[i]
-        const next = wrappers.current[i + 1]
+      tops.forEach((top, i) => {
+        if (top !== null && top < half) current = i
+      })
+      inners.current.forEach((inner, i) => {
         if (!inner) return
-        let progress = 0
-        if (next) {
-          const height = inner.offsetHeight
-          const nextTop = next.getBoundingClientRect().top
-          progress = Math.min(1, Math.max(0, (STICK + i * STEP + height - nextTop) / height))
-        }
-        inner.style.transform = calm ? '' : `scale(${1 - progress * 0.06})`
-        inner.style.filter = progress > 0 ? `brightness(${1 - progress * 0.55})` : ''
+        const nextTop = tops[i + 1]
+        const height = heights[i]
+        const progress =
+          nextTop == null || !height ? 0 : Math.min(1, Math.max(0, (STICK + i * STEP + height - nextTop) / height))
+        const transform = calm || !progress ? '' : `scale(${(1 - progress * 0.06).toFixed(4)})`
+        if (inner.style.transform !== transform) inner.style.transform = transform
+        // escurecer com uma película preta (só opacidade, resolvida na GPU) em vez de filter: brightness
+        const shade = shades.current[i]
+        const opacity = progress ? (progress * 0.55).toFixed(3) : '0'
+        if (shade && shade.style.opacity !== opacity) shade.style.opacity = opacity
       })
       setActive(current)
     }
     const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(update)
+      if (inView && !raf) raf = requestAnimationFrame(update)
     }
+    // fora da tela, a pilha não faz conta nenhuma
+    const io = new IntersectionObserver(([entry]) => {
+      inView = entry.isIntersecting
+      if (inView) onScroll()
+    })
+    if (root.current) io.observe(root.current)
     update()
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', onScroll)
     return () => {
       cancelAnimationFrame(raf)
+      io.disconnect()
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onScroll)
     }
@@ -73,7 +88,7 @@ function DesktopStack({ onDetails }: { onDetails: (p: Project) => void }) {
   }
 
   return (
-    <div className="mx-auto hidden max-w-6xl gap-10 lg:grid lg:grid-cols-[190px_1fr]">
+    <div ref={root} className="mx-auto hidden max-w-6xl gap-10 lg:grid lg:grid-cols-[190px_1fr]">
       <nav aria-label="Projetos" className="sticky top-28 self-start">
         <p className="mb-4 font-mono text-[11px] uppercase tracking-[0.18em] text-zinc-600">projetos</p>
         <ol className="relative space-y-1 border-l border-white/10">
@@ -109,9 +124,16 @@ function DesktopStack({ onDetails }: { onDetails: (p: Project) => void }) {
               ref={(el) => {
                 inners.current[i] = el
               }}
-              className="origin-top will-change-transform"
+              className="relative origin-top"
             >
               <ProjectCard project={project} onDetails={onDetails} />
+              <div
+                ref={(el) => {
+                  shades.current[i] = el
+                }}
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 rounded-2xl bg-black opacity-0"
+              />
             </div>
           </div>
         ))}
@@ -283,6 +305,7 @@ function Details({ project, onClose }: { project: Project; onClose: () => void }
 export function Projects() {
   const [open, setOpen] = useState<Project | null>(null)
   const trigger = useRef<HTMLElement | null>(null)
+  const isDesktop = useMedia('(min-width: 1024px)')
 
   const openDetails = useCallback((project: Project) => {
     trigger.current = document.activeElement as HTMLElement | null
@@ -304,8 +327,8 @@ export function Projects() {
         />
       </div>
 
-      <DesktopStack onDetails={openDetails} />
-      <MobileCarousel onDetails={openDetails} />
+      {/* só um dos dois existe na página: o celular não baixa os prints de página inteira do desktop */}
+      {isDesktop ? <DesktopStack onDetails={openDetails} /> : <MobileCarousel onDetails={openDetails} />}
 
       {open ? <Details project={open} onClose={close} /> : null}
     </section>

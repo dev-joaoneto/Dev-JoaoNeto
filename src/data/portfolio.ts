@@ -39,28 +39,28 @@ export const socialLinks = [
 
 const icon = {
   javascript:
-    'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg',
+    '/icons/tech/javascript.svg',
   typescript:
-    'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg',
-  react: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg',
-  next: 'https://cdn.simpleicons.org/nextdotjs/ffffff',
-  expo: 'https://cdn.simpleicons.org/expo/ffffff',
+    '/icons/tech/typescript.svg',
+  react: '/icons/tech/react.svg',
+  next: '/icons/tech/next.svg',
+  expo: '/icons/tech/expo.svg',
   tailwind:
-    'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg',
+    '/icons/tech/tailwind.svg',
   responsive:
     '/icons/responsive.svg',
-  wordpress: 'https://cdn.simpleicons.org/wordpress/21759B',
-  figma: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg',
-  node: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg',
+  wordpress: '/icons/tech/wordpress.svg',
+  figma: '/icons/tech/figma.svg',
+  node: '/icons/tech/node.svg',
   firebase:
-    'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg',
-  rest: 'https://cdn.simpleicons.org/openapiinitiative/6BA539',
-  sql: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg',
-  nosql: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg',
-  docker: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg',
-  git: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg',
-  github: 'https://cdn.simpleicons.org/github/ffffff',
-  n8n: 'https://cdn.simpleicons.org/n8n/EA4B71',
+    '/icons/tech/firebase.svg',
+  rest: '/icons/tech/rest.svg',
+  sql: '/icons/tech/sql.svg',
+  nosql: '/icons/tech/nosql.svg',
+  docker: '/icons/tech/docker.svg',
+  git: '/icons/tech/git.svg',
+  github: '/icons/tech/github.svg',
+  n8n: '/icons/tech/n8n.svg',
   llm: '/icons/llm.svg',
   agent: '/icons/agent.svg',
   prompt: '/icons/prompt.svg',
@@ -68,11 +68,11 @@ const icon = {
   finetune: '/icons/finetune.svg',
   aiSkills: '/icons/skills.svg',
   evals: '/icons/evals.svg',
-  claude: 'https://cdn.simpleicons.org/claude/D97757',
-  gemini: 'https://cdn.simpleicons.org/googlegemini/8E75B2',
-  mcp: 'https://cdn.simpleicons.org/modelcontextprotocol/ffffff',
-  supabase: 'https://cdn.simpleicons.org/supabase/3FCF8E',
-  stripe: 'https://cdn.simpleicons.org/stripe/635BFF',
+  claude: '/icons/tech/claude.svg',
+  gemini: '/icons/tech/gemini.svg',
+  mcp: '/icons/tech/mcp.svg',
+  supabase: '/icons/tech/supabase.svg',
+  stripe: '/icons/tech/stripe.svg',
 }
 
 export const skills = [

@@ -7,31 +7,43 @@ export function Header() {
   const [activeLink, setActiveLink] = useState('#home')
 
   useEffect(() => {
-    function handleScroll() {
-      setHasScrolled(window.scrollY > 24)
-
-      const scrollPosition = window.scrollY + window.innerHeight * 0.35
-      const currentLink = navLinks
-        .map((link) => {
-          const section = document.querySelector(link.href)
-
-          return section instanceof HTMLElement
-            ? { href: link.href, top: section.offsetTop }
-            : null
-        })
-        .filter(Boolean)
-        .reverse()
-        .find((section) => section && scrollPosition >= section.top)
-
-      if (currentLink) {
-        setActiveLink(currentLink.href)
-      }
+    // posição de cada seção medida só quando o layout muda, não a cada evento de rolagem
+    let sections: { href: string; top: number }[] = []
+    const measure = () => {
+      sections = navLinks.flatMap((link) => {
+        const section = document.querySelector(link.href)
+        return section instanceof HTMLElement ? [{ href: link.href, top: section.offsetTop }] : []
+      })
     }
 
-    handleScroll()
-    window.addEventListener('scroll', handleScroll, { passive: true })
+    let raf = 0
+    const update = () => {
+      raf = 0
+      setHasScrolled(window.scrollY > 24)
+      const scrollPosition = window.scrollY + window.innerHeight * 0.35
+      let current: string | null = null
+      for (const section of sections) if (scrollPosition >= section.top) current = section.href
+      if (current) setActiveLink(current)
+    }
+    // no máximo uma atualização por quadro
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update)
+    }
 
-    return () => window.removeEventListener('scroll', handleScroll)
+    measure()
+    update()
+    const resizeObserver = new ResizeObserver(() => {
+      measure()
+      onScroll()
+    })
+    resizeObserver.observe(document.body)
+    window.addEventListener('scroll', onScroll, { passive: true })
+
+    return () => {
+      cancelAnimationFrame(raf)
+      resizeObserver.disconnect()
+      window.removeEventListener('scroll', onScroll)
+    }
   }, [])
 
   return (

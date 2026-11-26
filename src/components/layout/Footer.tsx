@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import { profile } from '../../data/portfolio'
 import { useMotionOk } from '../../hooks/useMotionOk'
 import Magnet from '../reactbits/Magnet'
@@ -15,12 +16,28 @@ function SignalLine() {
 export function Footer() {
   const motionOk = useMotionOk()
   const year = new Date().getFullYear()
+  const stage = useRef<HTMLDivElement>(null)
+  // o efeito (e a fonte Roboto Flex de ~190 KB que ele baixa) só entra quando o rodapé está chegando
+  const [near, setNear] = useState(false)
+
+  useEffect(() => {
+    const el = stage.current
+    if (!el || near) return
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setNear(true)
+      },
+      { rootMargin: '600px 0px' },
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [near])
 
   return (
     <footer className="liquid-glass border-t border-white/10 px-5 pt-14 pb-8">
       <div className="mx-auto max-w-6xl">
-        <div className="h-[90px] select-none sm:h-[140px] lg:h-[190px]" aria-hidden="true">
-          {motionOk ? (
+        <div ref={stage} className="h-[90px] select-none sm:h-[140px] lg:h-[190px]" aria-hidden="true">
+          {motionOk && near ? (
             <TextPressure text="VAMOS CONSTRUIR" textColor="#ffffff" pressureColor="#34d399" minFontSize={32} idle="none" />
           ) : (
             <p className="text-center text-5xl font-black tracking-tight text-white sm:text-7xl">VAMOS CONSTRUIR</p>

@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { profile } from '../../data/portfolio'
 import { useMotionOk } from '../../hooks/useMotionOk'
 import { AgentConsole } from '../effects/AgentConsole'
@@ -9,8 +9,31 @@ import fotoPerfil from '/assets/foto-perfil.webp'
 // three.js só é baixado em desktop com movimento liberado
 const Lanyard = lazy(() => import('../reactbits/Lanyard'))
 
+/** true só depois que a página carregou e o navegador ficou ocioso: montar o 3D não trava a abertura */
+function useIdleReady(enabled: boolean) {
+  const [ready, setReady] = useState(false)
+  useEffect(() => {
+    if (!enabled || ready) return
+    let idle = 0
+    let timer = 0
+    const schedule = () => {
+      if (typeof window.requestIdleCallback === 'function') idle = window.requestIdleCallback(() => setReady(true), { timeout: 2500 })
+      else timer = window.setTimeout(() => setReady(true), 800)
+    }
+    if (document.readyState === 'complete') schedule()
+    else window.addEventListener('load', schedule, { once: true })
+    return () => {
+      window.removeEventListener('load', schedule)
+      if (idle) window.cancelIdleCallback(idle)
+      window.clearTimeout(timer)
+    }
+  }, [enabled, ready])
+  return ready
+}
+
 export function Hero() {
   const showBadge = useMotionOk(1024)
+  const badgeReady = useIdleReady(showBadge)
   const motionOk = useMotionOk()
 
   return (
@@ -25,6 +48,7 @@ export function Hero() {
       {/* crachá 3D pendurado do topo da hero; arraste para balançar */}
       <div className="absolute inset-y-0 right-0 hidden w-1/2 lg:block" aria-hidden="true">
         {showBadge ? (
+          badgeReady ? (
           <Suspense fallback={null}>
             <Lanyard
               frontImage="/assets/badge-front.webp"
@@ -42,6 +66,7 @@ export function Hero() {
               breeze={0.2}
             />
           </Suspense>
+          ) : null
         ) : (
           <img
             src="/assets/badge-front.webp"
