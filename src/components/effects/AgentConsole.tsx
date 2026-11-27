@@ -12,7 +12,7 @@ type Message = {
 }
 
 const answers: Record<Intent, string> = {
-  about: `Sou o agente do João. Ele é Desenvolvedor Full Stack e Engenheiro de IA: constrói produtos web de ponta a ponta, da interface em React à API em Node.js, e coloca IA dentro do produto: RAG, fine-tuning, agentes com MCP e skills, tudo medido com evals. Hoje são ${projects.length} projetos publicados.`,
+  about: `Sou o agente do João. Ele é Desenvolvedor Full Stack e AI Engineer: constrói produtos web de ponta a ponta, da interface em React à API em Node.js, e coloca IA dentro do produto: RAG, fine-tuning, agentes com MCP e skills, tudo medido com evals. Hoje são ${projects.length} projetos publicados.`,
   ai: 'Ele trabalha o ciclo inteiro. Começa pelo dado: limpeza, chunking, embeddings e banco vetorial para um RAG que cita a fonte. Escolhe o modelo e decide entre prompt, RAG ou fine-tuning (LoRA, dataset curado) pelo custo e pela precisão. Dá ação ao agente com tool calling, servidores MCP e skills reutilizáveis. E fecha com evals, guardrails e observabilidade de custo, latência e alucinação, para o agente ser confiável em produção.',
   projects: 'Estes são alguns produtos que ele colocou no ar. Todos estão online para você abrir agora:',
   stack:

@@ -7,7 +7,7 @@ import digytron from '/assets/digytron.webp'
 
 export const profile = {
   name: 'João Neto',
-  role: 'Desenvolvedor Full Stack & Engenheiro de IA',
+  role: 'Desenvolvedor Full Stack & AI Engineer',
   whatsappUrl: 'https://contate.me/5561986366632',
   resumeUrl: '/docs/joao-neto-curriculo.pdf',
   email: 'joaonetodevops@gmail.com',
@@ -262,7 +262,7 @@ export const experience: Experience[] = [
   {
     period: '09/2025 — atual',
     current: true,
-    title: 'Programador Web Full Stack & Engenheiro de IA',
+    title: 'Programador Web Full Stack & AI Engineer',
     org: 'Freelancer · autônomo',
     groups: [
       {

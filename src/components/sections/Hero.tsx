@@ -90,7 +90,7 @@ export function Hero() {
               </span>
             </span>
             <span className="mt-4 block text-2xl font-semibold leading-tight text-zinc-300 sm:text-3xl">
-              Full Stack <span className="text-emerald-400">&amp;</span> Engenheiro de IA
+              Full Stack <span className="text-emerald-400">&amp;</span> AI Engineer
             </span>
           </h1>
 

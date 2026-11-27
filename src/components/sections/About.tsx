@@ -71,7 +71,7 @@ export function About() {
                 organizado e fácil de evoluir.
               </p>
               <p>
-                Como Engenheiro de IA, trabalho o ciclo inteiro de um sistema
+                Como AI Engineer, trabalho o ciclo inteiro de um sistema
                 inteligente. Preparo os dados e monto RAG com embeddings e banco
                 vetorial para o modelo responder com base em fonte real. Escolho
                 entre prompt, RAG ou fine-tuning pelo custo e pela precisão de cada
